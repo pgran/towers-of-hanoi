@@ -4,6 +4,7 @@ import time
 import sys
 import optparse
 # Towers of hanoi.
+# Only for testing
 
 def solve_hanoi(n, timestep, debug=False):
     global counter
