@@ -4,7 +4,6 @@ import time
 import sys
 import optparse
 # Towers of hanoi.
-# Only for testing
 
 def solve_hanoi(n, timestep, debug=False):
     global counter
@@ -61,16 +60,9 @@ parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can us
         dest='timestep', metavar='TIMESTEP', type='float')
 (options, args) = parser.parse_args()
 
-#debug
-print "options: ", options
-print args
-
 size = options.size
 debug = options.debug
 timestep = options.timestep
-print size
-print debug
-print timestep
   
 # generate towers:
 towers = { 0: [], 1: [], 2: [] }
