@@ -6,75 +6,83 @@ import sys
 import optparse
 
 
-def solve_hanoi(n, timestep, silent, compact, debug):
+def solve_hanoi(n):
     try:
         tower
     except NameError:
         global tower
-        tower = Tower(n)
+        tower = Tower()
 
     if n == 0:
         return
     else:
-        if debug: print "###### SOLVING FOR ", n-1, " ###################"
-        solve_hanoi(n-1, timestep, silent, compact, debug)
-        if debug: print "###### MOVING DISK ", n-1, " ###################"
-        tower.move_disc(n-1, debug)
-        if timestep:
-            time.sleep(timestep)
-        if not silent:
-            if compact:
-                tower.compact_print()
-            else:
-                os.system('clear')
-                tower.pretty_print()
-                if timestep:
-                    print "sleeping....ZZzzzz..", timestep
-        if debug: print "###### SOLVING FOR ", n-1, " ###################"
-        solve_hanoi(n-1, timestep, silent, compact, debug)
+        if options.debug: print
+        if options.debug: print
+        if options.debug: print "###### SOLVING FOR ", n-1, " ###################"
+        solve_hanoi(n-1)
+        tower.move_disc(n-1)
+        tower.display()
+        if options.debug: print "###### SOLVING FOR ", n-1, " ###################"
+        solve_hanoi(n-1)
 
 class Tower:
-    def __init__(self, size):
-        self.size = size
+    def __init__(self):
+        self.size = options.size
+        self.timestep = options.timestep
+        self.silent = options.silent
+        self.compact = options.compact
         self.moves = 0
         self.towers = { 0: [], 1: [], 2: [] }
         for i in range (self.size-1, -1, -1):
             self.towers[0].append(i)
     
-    def move_disc(self, disc_number, debug):
+    def move_disc(self, disc_number):
+        if options.debug: print "###### MOVING DISK ", disc_number, " ###################"
         for t in range(0,3):
             if disc_number in self.towers[t]:
-                if debug: print "###### Tower, Piece: ", t, disc_number
+                if options.debug: print "###### Tower, Piece: ", t, disc_number
                 if disc_number == 0:
-                    if debug:  print "popping piece ", disc_number, " from tower ", t
+                    if options.debug:  print "popping piece ", disc_number, " from tower ", t
                     self.towers[t].pop()
-                    if debug: print "towers: ", self.towers
-                    if debug: print "putting piece ", disc_number, " on tower", (t+1)%3
+                    if options.debug: print "towers: ", self.towers
+                    if options.debug: print "putting piece ", disc_number, " on tower", (t+1)%3
                     self.towers[(t+1)%3].append(disc_number)
-                    if debug: print "towers: ", self.towers
+                    if options.debug: print "towers: ", self.towers
                     break
                 else:
-                    if debug: print "popping piece ", disc_number, " from tower ", t
+                    if options.debug: print "popping piece ", disc_number, " from tower ", t
                     self.towers[t].pop()
                     if len(self.towers[(t+1)%3]) == 0 or self.towers[(t+1)%3][-1] > disc_number:
-                        if debug: print "putting piece ", disc_number, " on tower", (t+1)%3
+                        if options.debug: print "putting piece ", disc_number, " on tower", (t+1)%3
                         self.towers[(t+1)%3].append(disc_number)
-                        if debug: print "towers: ", self.towers
+                        if options.debug: print "towers: ", self.towers
                     else:
-                        if debug: print "putting piece ", disc_number, " on tower", (t+2)%3
+                        if options.debug: print "putting piece ", disc_number, " on tower", (t+2)%3
                         self.towers[(t+2)%3].append(disc_number)
-                        if debug: print "towers: ", self.towers
+                        if options.debug: print "towers: ", self.towers
                     break
         self.moves += 1
 
-    def pretty_print(self):
+    def display(self):
+        if self.timestep:
+            time.sleep(self.timestep)
+        if not self.silent:
+            if self.compact:
+                self.__compact_print()
+            else:
+                os.system('clear')
+                self.__pretty_print()
+                if self.timestep:
+                    print "sleeping....ZZzzzz..", self.timestep
+
+    def __pretty_print(self):
         print "#### CURRENT TOWERS ####"
         for t in self.towers:
             print self.towers[t]
         print "move: ", self.moves
         print "########################"
 
-    def compact_print(self):
+    def __compact_print(self):
         print "towers: ", self.towers, "moves: ", self.moves
 
 
@@ -88,6 +96,6 @@ parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can us
         dest='timestep', metavar='TIMESTEP', type='float')
 (options, args) = parser.parse_args()
 
-solve_hanoi(options.size, options.timestep, options.silent, options.compact, options.debug)
+solve_hanoi(options.size)
 print "## FINAL CONFIG ##"
-tower.compact_print()
+tower.display()
