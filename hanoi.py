@@ -18,11 +18,10 @@ def solve_hanoi(n):
     else:
         if options.debug: print
         if options.debug: print
-        if options.debug: print "###### SOLVING FOR ", n-1, " ###################"
+        if options.debug: print "###### SOLVING FOR ", n, " ###################"
         solve_hanoi(n-1)
         tower.move_disc(n-1)
         tower.display()
-        if options.debug: print "###### SOLVING FOR ", n-1, " ###################"
         solve_hanoi(n-1)
 
 class Tower:
