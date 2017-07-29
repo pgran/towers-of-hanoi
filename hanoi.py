@@ -6,23 +6,17 @@ import sys
 import optparse
 
 
-def solve_hanoi(n):
-    try:
-        tower
-    except NameError:
-        global tower
-        tower = Tower()
-
+def solve_hanoi(n, tower):
     if n == 0:
         return
     else:
         if options.debug: print
         if options.debug: print
         if options.debug: print "###### SOLVING FOR ", n, " ###################"
-        solve_hanoi(n-1)
+        solve_hanoi(n-1, tower)
         tower.move_disc(n-1)
         tower.display()
-        solve_hanoi(n-1)
+        solve_hanoi(n-1, tower)
 
 class Tower:
     def __init__(self):
@@ -60,9 +54,6 @@ class Tower:
                         self.towers[(t+2)%3].append(disc_number)
                         if options.debug: print "towers: ", self.towers
                     break
-        if self.timestep:
-            time.sleep(self.timestep)
-        self.moves += 1
 
     def display(self):
         if not self.silent:
@@ -99,15 +90,16 @@ parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can us
 
 size = int(options.size)
 
+tower = Tower()
 if options.stats:
     start_time = time.clock()
-    solve_hanoi(options.size)
+    solve_hanoi(options.size, tower)
     running_time = time.clock() - start_time
     print "Number of discs: ", options.size
     print "Running time was: ", running_time
     print "Total number of moves: ", 2**options.size - 1, " (2^" + str(options.size) + "-1)"
     print "Number of moves/second: ", (2**options.size - 1)/running_time
 else:
-    solve_hanoi(options.size)
+    solve_hanoi(options.size, tower)
     print "## FINAL CONFIG ##"
 tower.display()
