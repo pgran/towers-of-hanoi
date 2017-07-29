@@ -26,7 +26,7 @@ def solve_hanoi(n):
 
 class Tower:
     def __init__(self):
-        self.size = options.size
+        self.size = int(options.size)
         self.timestep = options.timestep
         self.silent = options.silent
         self.compact = options.compact
@@ -92,10 +92,22 @@ parser.add_option('-n', '--number', help='number of discs in the tower', type='i
 parser.add_option('-d', '--debug', help='adds debug output', dest='debug', default=False, action='store_true')
 parser.add_option('-s', '--silent', help='only print the resulting tower config', dest='silent', default=False, action='store_true')
 parser.add_option('-c', '--compact', help='print compact output, othwerwise "animated"', dest='compact', default=False, action='store_true')
+parser.add_option('--stats', help='print statistics about the solve', dest='stats', default=False, action='store_true')
 parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can use float for subseconds',
         dest='timestep', metavar='TIMESTEP', type='float')
 (options, args) = parser.parse_args()
 
-solve_hanoi(options.size)
-print "## FINAL CONFIG ##"
+size = int(options.size)
+
+if options.stats:
+    start_time = time.clock()
+    solve_hanoi(options.size)
+    running_time = time.clock() - start_time
+    print "Number of discs: ", options.size
+    print "Running time was: ", running_time
+    print "Total number of moves: ", 2**options.size - 1, " (2^" + str(options.size) + "-1)"
+    print "Number of moves/second: ", (2**options.size - 1)/running_time
+else:
+    solve_hanoi(options.size)
+    print "## FINAL CONFIG ##"
 tower.display()
