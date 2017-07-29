@@ -61,26 +61,27 @@ class Tower:
                         self.towers[(t+2)%3].append(disc_number)
                         if options.debug: print "towers: ", self.towers
                     break
+        if self.timestep:
+            time.sleep(self.timestep)
         self.moves += 1
 
     def display(self):
-        if self.timestep:
-            time.sleep(self.timestep)
         if not self.silent:
             if self.compact:
                 self.__compact_print()
             else:
-                os.system('clear')
                 self.__pretty_print()
-                if self.timestep:
-                    print "sleeping....ZZzzzz..", self.timestep
 
     def __pretty_print(self):
+        if not options.debug:
+            os.system('clear')
         print "#### CURRENT TOWERS ####"
         for t in self.towers:
             print self.towers[t]
         print "move: ", self.moves
         print "########################"
+        if self.timestep and options.debug:
+            print "sleeping....ZZzzzz..", self.timestep
 
     def __compact_print(self):
         print "towers: ", self.towers, "moves: ", self.moves
