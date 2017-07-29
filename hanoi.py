@@ -6,7 +6,7 @@ import sys
 import optparse
 
 
-def solve_hanoi(n, timestep, silent, debug):
+def solve_hanoi(n, timestep, silent, compact, debug):
     try:
         tower
     except NameError:
@@ -17,18 +17,21 @@ def solve_hanoi(n, timestep, silent, debug):
         return
     else:
         if debug: print "###### SOLVING FOR ", n-1, " ###################"
-        solve_hanoi(n-1, timestep, silent, debug)
+        solve_hanoi(n-1, timestep, silent, compact, debug)
         if debug: print "###### MOVING DISK ", n-1, " ###################"
         tower.move_disc(n-1, debug)
         if timestep:
-            print "sleeping....ZZzzzz..", timestep
             time.sleep(timestep)
         if not silent:
-            #os.system('clear')
-            #tower.pretty_print()
-            tower.compact_print()
+            if compact:
+                tower.compact_print()
+            else:
+                os.system('clear')
+                tower.pretty_print()
+                if timestep:
+                    print "sleeping....ZZzzzz..", timestep
         if debug: print "###### SOLVING FOR ", n-1, " ###################"
-        solve_hanoi(n-1, timestep, silent, debug)
+        solve_hanoi(n-1, timestep, silent, compact, debug)
 
 class Tower:
     def __init__(self, size):
@@ -80,10 +83,11 @@ parser = optparse.OptionParser()
 parser.add_option('-n', '--number', help='number of discs in the tower', type='int', dest='size', default=5)
 parser.add_option('-d', '--debug', help='adds debug output', dest='debug', default=False, action='store_true')
 parser.add_option('-s', '--silent', help='only print the resulting tower config', dest='silent', default=False, action='store_true')
+parser.add_option('-c', '--compact', help='print compact output, othwerwise "animated"', dest='compact', default=False, action='store_true')
 parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can use float for subseconds',
         dest='timestep', metavar='TIMESTEP', type='float')
 (options, args) = parser.parse_args()
 
-solve_hanoi(options.size, options.timestep, options.silent, options.debug)
+solve_hanoi(options.size, options.timestep, options.silent, options.compact, options.debug)
 print "## FINAL CONFIG ##"
 tower.compact_print()
