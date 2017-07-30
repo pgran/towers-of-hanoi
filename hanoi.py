@@ -54,6 +54,10 @@ class Tower:
                         self.towers[(t+2)%3].append(disc_number)
                         if options.debug: print "towers: ", self.towers
                     break
+        if self.timestep:
+            time.sleep(self.timestep)
+        self.moves += 1
+
 
     def display(self):
         if not self.silent:
