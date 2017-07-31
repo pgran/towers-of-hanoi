@@ -66,6 +66,9 @@ class Tower:
             else:
                 self.__pretty_print()
 
+    def set_timestep(self, timestep):
+        self.timestep = timestep
+
     def __pretty_print(self):
         if not options.debug:
             os.system('clear')
@@ -93,9 +96,11 @@ parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can us
         dest='timestep', metavar='TIMESTEP', type='float')
 (options, args) = parser.parse_args()
 
-size = int(options.size)
+
 
 tower = Tower()
+if not options.compact and not options.timestep:
+    tower.set_timestep(0.2)
 if options.stats or options.walltime:
     if options.walltime:
         time_type = 'Wall time'
@@ -112,6 +117,7 @@ if options.stats or options.walltime:
     print "Total number of moves: ", 2**options.size - 1, " (2^" + str(options.size) + "-1)"
     print "Number of moves/second: ", (2**options.size - 1)/running_time
 else:
+    tower.display()
     solve_hanoi(options.size, tower)
-    print "## FINAL CONFIG ##"
+    #print "## FINAL CONFIG ##"
 #tower.display()
