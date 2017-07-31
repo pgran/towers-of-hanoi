@@ -87,7 +87,8 @@ parser.add_option('-n', '--number', help='number of discs in the tower', type='i
 parser.add_option('-d', '--debug', help='adds debug output', dest='debug', default=False, action='store_true')
 parser.add_option('-s', '--silent', help='only print the resulting tower config', dest='silent', default=False, action='store_true')
 parser.add_option('-c', '--compact', help='print compact output, othwerwise "animated"', dest='compact', default=False, action='store_true')
-parser.add_option('--stats', help='print statistics about the solve', dest='stats', default=False, action='store_true')
+parser.add_option('-S', '--stats', help='print statistics about the solve (counting processor time)', dest='stats', default=False, action='store_true')
+parser.add_option('-W', '--stats-walltime', help='print statistics about the solve (counting wall time)', dest='walltime', default=False, action='store_true')
 parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can use float for subseconds',
         dest='timestep', metavar='TIMESTEP', type='float')
 (options, args) = parser.parse_args()
@@ -95,15 +96,22 @@ parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can us
 size = int(options.size)
 
 tower = Tower()
-if options.stats:
-    start_time = time.clock()
-    solve_hanoi(options.size, tower)
-    running_time = time.clock() - start_time
+if options.stats or options.walltime:
+    if options.walltime:
+        time_type = 'Wall time'
+        start_time = time.time()
+        solve_hanoi(options.size, tower)
+        running_time = time.time() - start_time
+    else:
+        time_type = 'Processor time'
+        start_time = time.clock()
+        solve_hanoi(options.size, tower)
+        running_time = time.clock() - start_time
     print "Number of discs: ", options.size
-    print "Running time was: ", running_time
+    print "Running time was: ", running_time, '(' + time_type + ')'
     print "Total number of moves: ", 2**options.size - 1, " (2^" + str(options.size) + "-1)"
     print "Number of moves/second: ", (2**options.size - 1)/running_time
 else:
     solve_hanoi(options.size, tower)
     print "## FINAL CONFIG ##"
-tower.display()
+#tower.display()
