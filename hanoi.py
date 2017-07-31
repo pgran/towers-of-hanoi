@@ -99,7 +99,7 @@ parser.add_option('-t', '--timestep', help='adds timestepping in seconds. can us
 
 
 tower = Tower()
-if not options.compact and not options.timestep:
+if not options.compact and not options.timestep and not options.silent:
     tower.set_timestep(0.2)
 if options.stats or options.walltime:
     if options.walltime:
